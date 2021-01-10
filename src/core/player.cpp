@@ -217,15 +217,15 @@ void Player::NextItem(Engine::TrackChangeFlags change, bool next_album) {
 
   int i = active_playlist->current_row();
   if (next_album && i != -1) {
-      QString album = active_playlist->current_item_metadata().album();
+    QString album = active_playlist->current_item_metadata().album();
 
+    i = active_playlist->next_row(ignore_repeat_track);
+    while (active_playlist->item_at(i)->Metadata().album() == album) {
+      active_playlist->set_current_row(i,true);
       i = active_playlist->next_row(ignore_repeat_track);
-      while (active_playlist->item_at(i)->Metadata().album() == album) {
-          active_playlist->set_current_row(i,true);
-          i = active_playlist->next_row(ignore_repeat_track);
-      }
+    }
   } else {
-      i = active_playlist->next_row(ignore_repeat_track);
+    i = active_playlist->next_row(ignore_repeat_track);
   }
 
   if (i == -1) {
