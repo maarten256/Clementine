@@ -962,7 +962,7 @@
     <string>Skip to the next album</string>
    </property>
    <property name="shortcut">
-    <string>Space</string>
+    <string>F9</string>
    </property>
   </action>
  </widget>
