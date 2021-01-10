@@ -221,7 +221,7 @@ void Player::NextItem(Engine::TrackChangeFlags change, bool next_album) {
 
     i = active_playlist->next_row(ignore_repeat_track);
     while (active_playlist->item_at(i)->Metadata().album() == album) {
-      active_playlist->set_current_row(i,true);
+      active_playlist->set_current_row(i, true);
       i = active_playlist->next_row(ignore_repeat_track);
     }
   } else {
