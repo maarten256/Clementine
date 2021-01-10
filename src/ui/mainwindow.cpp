@@ -356,6 +356,8 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
   ui_->action_jump->setIcon(IconLoader::Load("go-jump", IconLoader::Base));
   ui_->action_next_track->setIcon(
       IconLoader::Load("media-skip-forward", IconLoader::Base));
+  ui_->action_next_album->setIcon(
+      IconLoader::Load("media-skip-forward", IconLoader::Base));
   ui_->action_open_media->setIcon(
       IconLoader::Load("document-open", IconLoader::Base));
   ui_->action_open_cd->setIcon(
@@ -417,6 +419,8 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
   // Action connections
   connect(ui_->action_next_track, SIGNAL(triggered()), app_->player(),
           SLOT(Next()));
+  connect(ui_->action_next_album, SIGNAL(triggered()), app_->player(),
+          SLOT(NextAlbum()));
   connect(ui_->action_previous_track, SIGNAL(triggered()), app_->player(),
           SLOT(Previous()));
   connect(ui_->action_play_pause, SIGNAL(triggered()), app_->player(),
@@ -546,6 +550,12 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
   // Add the shuffle and repeat action groups to the menu
   ui_->action_shuffle_mode->setMenu(ui_->playlist_sequence->shuffle_menu());
   ui_->action_repeat_mode->setMenu(ui_->playlist_sequence->repeat_menu());
+
+  // Next Actions
+  QMenu* next_menu = new QMenu(this);
+  next_menu->addAction(ui_->action_next_track);
+  next_menu->addAction(ui_->action_next_album);
+  ui_->forward_button->setMenu(next_menu);
 
   // Stop actions
   QMenu* stop_menu = new QMenu(this);
