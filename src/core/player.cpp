@@ -216,14 +216,18 @@ void Player::NextItem(Engine::TrackChangeFlags change, bool next_album) {
   const bool ignore_repeat_track = change & Engine::Manual;
 
   int i = active_playlist->current_row();
+  int original_index = i;
   if (next_album && i != -1) {
-    QString album = active_playlist->current_item_metadata().album();
+    if(active_playlist->sequence()->repeat_mode() != PlaylistSequence::Repeat_Track) {
+      QString album = active_playlist->current_item_metadata().album();
 
-    i = active_playlist->next_row(ignore_repeat_track);
-    while (i != -1 &&
-           active_playlist->item_at(i)->Metadata().album() == album) {
-      active_playlist->set_current_row(i, true);
       i = active_playlist->next_row(ignore_repeat_track);
+      while (i != -1 &&
+             active_playlist->item_at(i)->Metadata().album() == album &&
+        i != original_index) {
+        active_playlist->set_current_row(i, true);
+        i = active_playlist->next_row(ignore_repeat_track);
+      }
     }
   } else {
     i = active_playlist->next_row(ignore_repeat_track);
