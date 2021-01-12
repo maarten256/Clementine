@@ -218,7 +218,8 @@ void Player::NextItem(Engine::TrackChangeFlags change, bool next_album) {
   int i = active_playlist->current_row();
   int original_index = i;
   if (next_album && i != -1) {
-    if(active_playlist->sequence()->repeat_mode() != PlaylistSequence::Repeat_Track) {
+    if (active_playlist->sequence()->repeat_mode() !=
+            PlaylistSequence::Repeat_Track) {
       QString album = active_playlist->current_item_metadata().album();
 
       i = active_playlist->next_row(ignore_repeat_track);
