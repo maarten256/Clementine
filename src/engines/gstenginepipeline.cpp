@@ -48,13 +48,11 @@ const int GstEnginePipeline::kEqBandCount = 10;
 const int GstEnginePipeline::kEqBandFrequencies[] = {
     60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000};
 
-int GstEnginePipeline::sId = 1;
 GstElementDeleter* GstEnginePipeline::sElementDeleter = nullptr;
 
 GstEnginePipeline::GstEnginePipeline(GstEngine* engine)
-    : GstPipelineBase(),
+    : GstPipelineBase("audio"),
       engine_(engine),
-      id_(sId++),
       valid_(false),
       sink_(GstEngine::kAutoSink),
       segment_start_(0),
@@ -510,7 +508,7 @@ void GstEnginePipeline::MaybeLinkDecodeToAudio() {
 }
 
 bool GstEnginePipeline::InitFromString(const QString& pipeline) {
-  if (!Init("pipeline")) return false;
+  if (!Init()) return false;
 
   GstElement* new_bin =
       CreateDecodeBinFromString(pipeline.toLatin1().constData());
@@ -529,7 +527,7 @@ bool GstEnginePipeline::InitFromString(const QString& pipeline) {
 
 bool GstEnginePipeline::InitFromReq(const MediaPlaybackRequest& req,
                                     qint64 end_nanosec) {
-  if (!Init("pipeline")) return false;
+  if (!Init()) return false;
 
   current_ = req;
   QUrl url = current_.url_;
