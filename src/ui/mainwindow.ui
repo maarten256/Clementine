@@ -1017,7 +1017,6 @@
  </customwidgets>
  <resources>
   <include location="../../data/data.qrc"/>
-  <include location="../../data/data.qrc"/>
  </resources>
  <connections/>
 </ui>

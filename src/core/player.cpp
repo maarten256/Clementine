@@ -216,10 +216,10 @@ void Player::NextItem(Engine::TrackChangeFlags change, bool next_album) {
   const bool ignore_repeat_track = change & Engine::Manual;
 
   int i = active_playlist->current_row();
-  int original_index = i;
   if (next_album && i != -1) {
     if (active_playlist->sequence()->repeat_mode() !=
         PlaylistSequence::Repeat_Track) {
+      int original_index = i;
       QString album = active_playlist->current_item_metadata().album();
 
       i = active_playlist->next_row(ignore_repeat_track);
