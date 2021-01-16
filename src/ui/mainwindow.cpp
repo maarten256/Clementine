@@ -978,6 +978,9 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
           SIGNAL(RepeatModeChanged(PlaylistSequence::RepeatMode)), osd_,
           SLOT(RepeatModeChanged(PlaylistSequence::RepeatMode)));
   connect(app_->playlist_manager()->sequence(),
+          SIGNAL(RepeatModeChanged(PlaylistSequence::RepeatMode)),
+          SLOT(SetNextAlbumEnabled(PlaylistSequence::RepeatMode)));
+  connect(app_->playlist_manager()->sequence(),
           SIGNAL(ShuffleModeChanged(PlaylistSequence::ShuffleMode)), osd_,
           SLOT(ShuffleModeChanged(PlaylistSequence::ShuffleMode)));
 
@@ -1079,6 +1082,10 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
   CommandlineOptionsReceived(options);
 
   if (!options.contains_play_options()) LoadPlaybackStatus();
+
+  if (app_->playlist_manager()->current()->sequence()->repeat_mode() ==
+      PlaylistSequence::Repeat_Track)
+    ui_->action_next_album->setDisabled(true);
 
   initialized_ = true;
 
@@ -3104,5 +3111,15 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
     event->accept();
   } else {
     QMainWindow::keyPressEvent(event);
+  }
+}
+
+void MainWindow::SetNextAlbumEnabled(PlaylistSequence::RepeatMode mode) {
+  if (mode == PlaylistSequence::Repeat_Track) {
+    if (ui_->action_next_album->isEnabled())
+      ui_->action_next_album->setDisabled(true);
+  } else {
+    if (!ui_->action_next_album->isEnabled())
+      ui_->action_next_album->setEnabled(true);
   }
 }
