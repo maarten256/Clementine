@@ -978,11 +978,14 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
           SIGNAL(RepeatModeChanged(PlaylistSequence::RepeatMode)), osd_,
           SLOT(RepeatModeChanged(PlaylistSequence::RepeatMode)));
   connect(app_->playlist_manager()->sequence(),
-          SIGNAL(RepeatModeChanged(PlaylistSequence::RepeatMode)),
-          SLOT(SetNextAlbumEnabled(PlaylistSequence::RepeatMode)));
-  connect(app_->playlist_manager()->sequence(),
           SIGNAL(ShuffleModeChanged(PlaylistSequence::ShuffleMode)), osd_,
           SLOT(ShuffleModeChanged(PlaylistSequence::ShuffleMode)));
+
+  // Connect the RepeatModeChanged signal such that it will dis/enable the
+  // action_next_album on the UI
+  connect(app_->playlist_manager()->sequence(),
+          SIGNAL(RepeatModeChanged(PlaylistSequence::RepeatMode)),
+          SLOT(SetNextAlbumEnabled(PlaylistSequence::RepeatMode)));
 
 #ifdef HAVE_LIBLASTFM
   connect(app_->scrobbler(), SIGNAL(CachedToScrobble()),
@@ -1083,6 +1086,7 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
 
   if (!options.contains_play_options()) LoadPlaybackStatus();
 
+  // Set the state of action_next_album based on the repeat mode.
   if (app_->playlist_manager()->current()->sequence()->repeat_mode() ==
       PlaylistSequence::Repeat_Track)
     ui_->action_next_album->setDisabled(true);
@@ -3114,6 +3118,8 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
   }
 }
 
+// Change the state of action_next_album based when the repeat mode is
+// changed.
 void MainWindow::SetNextAlbumEnabled(PlaylistSequence::RepeatMode mode) {
   if (mode == PlaylistSequence::Repeat_Track) {
     if (ui_->action_next_album->isEnabled())
