@@ -1088,7 +1088,9 @@ MainWindow::MainWindow(Application* app, SystemTrayIcon* tray_icon, OSD* osd,
 
   // Set the state of action_next_album based on the repeat mode.
   if (app_->playlist_manager()->current()->sequence()->repeat_mode() ==
-      PlaylistSequence::Repeat_Track)
+          PlaylistSequence::Repeat_Track ||
+      app_->playlist_manager()->current()->sequence()->repeat_mode() ==
+          PlaylistSequence::Repeat_Album)
     ui_->action_next_album->setDisabled(true);
 
   initialized_ = true;
@@ -3121,7 +3123,8 @@ void MainWindow::keyPressEvent(QKeyEvent* event) {
 // Change the state of action_next_album based when the repeat mode is
 // changed.
 void MainWindow::SetNextAlbumEnabled(PlaylistSequence::RepeatMode mode) {
-  if (mode == PlaylistSequence::Repeat_Track) {
+  if (mode == PlaylistSequence::Repeat_Track ||
+      mode == PlaylistSequence::Repeat_Album) {
     if (ui_->action_next_album->isEnabled())
       ui_->action_next_album->setDisabled(true);
   } else {
