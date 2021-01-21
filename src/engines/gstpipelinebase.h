@@ -1,5 +1,5 @@
 /* This file is part of Clementine.
-   Copyright 2010, David Sansome <me@davidsansome.com>
+   Copyright 2021, Jim Broadus <jbroadus@gmail.com>
 
    Clementine is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -15,32 +15,36 @@
    along with Clementine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef TRANSCODEROPTIONSFLAC_H
-#define TRANSCODEROPTIONSFLAC_H
+#ifndef GSTPIPELINEBASE_H
+#define GSTPIPELINEBASE_H
 
-#include "transcoderoptionsinterface.h"
+#include <gst/gst.h>
 
-class Ui_TranscoderOptionsFlac;
+#include <QObject>
 
-class TranscoderOptionsFlac : public TranscoderOptionsInterface {
-  Q_OBJECT
-
+class GstPipelineBase : public QObject {
  public:
-  TranscoderOptionsFlac(QWidget* parent = nullptr);
-  ~TranscoderOptionsFlac();
+  GstPipelineBase(const QString& type);
+  virtual ~GstPipelineBase();
 
-  void Load();
-  void Save();
+  virtual bool Init();
 
- private slots:
-  void ValueChanged(int value);
+  // Globally unique across all pipelines.
+  int id() const { return id_; }
+
+  void DumpGraph();
+
+ protected:
+  GstElement* pipeline_;
 
  private:
-  static bool IsInStreamingSubset(int level);
+  const QString type_;
 
-  static const char* kSettingsGroup;
-
-  Ui_TranscoderOptionsFlac* ui_;
+  // Using == to compare two pipelines is a bad idea, because new ones often
+  // get created in the same address as old ones.  This ID will be unique for
+  // each pipeline.
+  static std::atomic<int> sId;
+  const int id_;
 };
 
-#endif  // TRANSCODEROPTIONSFLAC_H
+#endif  // GSTPIPELINEBASE_H

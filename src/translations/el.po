@@ -26,7 +26,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2021-01-01 16:40+0000\n"
+"PO-Revision-Date: 2021-01-12 11:57+0000\n"
 "Last-Translator: John Maguire <john.maguire@gmail.com>\n"
 "Language-Team: Greek (http://www.transifex.com/davidsansome/clementine/language/el/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,11 +120,6 @@ msgid ""
 "%2"
 msgstr "Η αίτηση %1 απέτυχε:\n%2"
 
-#: playlist/playlistmanager.cpp:439
-#, qt-format
-msgid "%1 selected of"
-msgstr "%1 επιλεγμένα από"
-
 #: devices/deviceview.cpp:122
 #, qt-format
 msgid "%1 song"
@@ -145,7 +140,7 @@ msgstr "βρέθηκαν %1 τραγούδια"
 msgid "%1 songs found (showing %2)"
 msgstr "βρέθηκαν %1 τραγούδια (εμφάνιση %2)"
 
-#: playlist/playlistmanager.cpp:445 playlist/queue.cpp:228
+#: playlist/queue.cpp:228
 #, qt-format
 msgid "%1 tracks"
 msgstr "%1 κομμάτια"
@@ -166,10 +161,20 @@ msgstr "%1: Άρθρωμα Wiimotedev"
 msgid "%L1 other listeners"
 msgstr "%L1 άλλοι ακροατές"
 
+#: playlist/playlistmanager.cpp:439
+#, qt-format
+msgid "%L1 selected of"
+msgstr ""
+
 #: songinfo/lastfmtrackinfoprovider.cpp:94
 #, qt-format
 msgid "%L1 total plays"
 msgstr "%L1 συνολικές ακροάσεις"
+
+#: playlist/playlistmanager.cpp:445
+#, qt-format
+msgid "%L1 tracks"
+msgstr ""
 
 #: ../bin/src/ui_notificationssettingspage.h:432
 msgid "%filename%"
@@ -989,7 +994,7 @@ msgstr "Βασικός τύπος ήχου"
 msgid "Behavior"
 msgstr "Συμπεριφορά"
 
-#: ../bin/src/ui_transcoderoptionsflac.h:82
+#: ../bin/src/ui_transcoderoptionsflac.h:94
 msgid "Best"
 msgstr "Βέλτιστος"
 
@@ -1492,14 +1497,14 @@ msgstr "Αδύνατη η σύνδεση στο Last.fm. Παρακαλώ προ
 msgid "Couldn't create playlist"
 msgstr "Δεν ήταν δυνατή η δημιουργία λίστας αναπαραγωγής"
 
-#: transcoder/transcoder.cpp:429
+#: transcoder/transcoder.cpp:428
 #, qt-format
 msgid ""
 "Couldn't find a muxer for %1, check you have the correct GStreamer plugins "
 "installed"
 msgstr "Δεν βρέθηκε κάποιος πολυπλέκτης για %1, ελέγξτε πως έχετε τα σωστά πρόσθετα του  GStreamer εγκατεστημένα"
 
-#: transcoder/transcoder.cpp:422
+#: transcoder/transcoder.cpp:421
 #, qt-format
 msgid ""
 "Couldn't find an encoder for %1, check you have the correct GStreamer "
@@ -2325,7 +2330,7 @@ msgstr "Αποτυχία ενημέρωσης του καταλόγου icecast:
 msgid "Failed to write new auto-tags to '%1'"
 msgstr "Αποτυχία εγγραφής των νέων αυτόματων ετικετών στο «%1»"
 
-#: ../bin/src/ui_transcoderoptionsflac.h:81
+#: ../bin/src/ui_transcoderoptionsflac.h:93
 #: ../bin/src/ui_transcoderoptionsmp3.h:199
 msgid "Fast"
 msgstr "Γρήγορη"
@@ -2466,7 +2471,7 @@ msgstr "Η λήθη της συσκευής θα έχει ως αποτέλεσ�
 #: ../bin/src/ui_wizardfinishpage.h:82
 #: ../bin/src/ui_songkickconcertwidget.h:99
 #: ../bin/src/ui_transcoderoptionsaac.h:127
-#: ../bin/src/ui_transcoderoptionsflac.h:79
+#: ../bin/src/ui_transcoderoptionsflac.h:91
 #: ../bin/src/ui_transcoderoptionsmp3.h:189
 #: ../bin/src/ui_transcoderoptionsopus.h:78
 #: ../bin/src/ui_transcoderoptionsspeex.h:215
@@ -4030,7 +4035,7 @@ msgstr "Τοποθέτηση τραγουδιών σε τυχαία σειρά"
 msgid "Qt"
 msgstr "Qt"
 
-#: ../bin/src/ui_transcoderoptionsflac.h:80
+#: ../bin/src/ui_transcoderoptionsflac.h:92
 #: ../bin/src/ui_transcoderoptionsmp3.h:191
 #: ../bin/src/ui_transcoderoptionsspeex.h:216
 #: ../bin/src/ui_transcoderoptionsvorbis.h:201
@@ -5653,6 +5658,13 @@ msgstr "WMA"
 #: playlist/playlisttabbar.cpp:193 ../bin/src/ui_behavioursettingspage.h:394
 msgid "Warn me when closing a playlist tab"
 msgstr "Προειδοποίηση κατά το κλείσιμο μίας λίστας αναπαραγωγής"
+
+#: transcoder/transcoderoptionsflac.cpp:46
+msgid ""
+"Warning: This compression level is outside of the streamable subset. This "
+"means that a decoder may not be able to start playing it mid-stream. It may "
+"also affect the performance of hardware decoders."
+msgstr ""
 
 #: core/song.cpp:447 transcoder/transcoder.cpp:257
 msgid "Wav"

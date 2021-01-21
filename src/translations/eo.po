@@ -11,7 +11,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2021-01-01 16:40+0000\n"
+"PO-Revision-Date: 2021-01-12 11:57+0000\n"
 "Last-Translator: John Maguire <john.maguire@gmail.com>\n"
 "Language-Team: Esperanto (http://www.transifex.com/davidsansome/clementine/language/eo/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,11 +105,6 @@ msgid ""
 "%2"
 msgstr ""
 
-#: playlist/playlistmanager.cpp:439
-#, qt-format
-msgid "%1 selected of"
-msgstr "%1 elektitaj el"
-
 #: devices/deviceview.cpp:122
 #, qt-format
 msgid "%1 song"
@@ -130,7 +125,7 @@ msgstr "%1 kantoj trovitaj"
 msgid "%1 songs found (showing %2)"
 msgstr "%1 kantoj trovitaj (%2 aperas)"
 
-#: playlist/playlistmanager.cpp:445 playlist/queue.cpp:228
+#: playlist/queue.cpp:228
 #, qt-format
 msgid "%1 tracks"
 msgstr "%1 trakoj"
@@ -151,9 +146,19 @@ msgstr "%1: Wiimotedev-modulo"
 msgid "%L1 other listeners"
 msgstr ""
 
+#: playlist/playlistmanager.cpp:439
+#, qt-format
+msgid "%L1 selected of"
+msgstr ""
+
 #: songinfo/lastfmtrackinfoprovider.cpp:94
 #, qt-format
 msgid "%L1 total plays"
+msgstr ""
+
+#: playlist/playlistmanager.cpp:445
+#, qt-format
+msgid "%L1 tracks"
 msgstr ""
 
 #: ../bin/src/ui_notificationssettingspage.h:432
@@ -974,7 +979,7 @@ msgstr ""
 msgid "Behavior"
 msgstr ""
 
-#: ../bin/src/ui_transcoderoptionsflac.h:82
+#: ../bin/src/ui_transcoderoptionsflac.h:94
 msgid "Best"
 msgstr ""
 
@@ -1477,14 +1482,14 @@ msgstr ""
 msgid "Couldn't create playlist"
 msgstr ""
 
-#: transcoder/transcoder.cpp:429
+#: transcoder/transcoder.cpp:428
 #, qt-format
 msgid ""
 "Couldn't find a muxer for %1, check you have the correct GStreamer plugins "
 "installed"
 msgstr ""
 
-#: transcoder/transcoder.cpp:422
+#: transcoder/transcoder.cpp:421
 #, qt-format
 msgid ""
 "Couldn't find an encoder for %1, check you have the correct GStreamer "
@@ -2310,7 +2315,7 @@ msgstr ""
 msgid "Failed to write new auto-tags to '%1'"
 msgstr ""
 
-#: ../bin/src/ui_transcoderoptionsflac.h:81
+#: ../bin/src/ui_transcoderoptionsflac.h:93
 #: ../bin/src/ui_transcoderoptionsmp3.h:199
 msgid "Fast"
 msgstr ""
@@ -2451,7 +2456,7 @@ msgstr ""
 #: ../bin/src/ui_wizardfinishpage.h:82
 #: ../bin/src/ui_songkickconcertwidget.h:99
 #: ../bin/src/ui_transcoderoptionsaac.h:127
-#: ../bin/src/ui_transcoderoptionsflac.h:79
+#: ../bin/src/ui_transcoderoptionsflac.h:91
 #: ../bin/src/ui_transcoderoptionsmp3.h:189
 #: ../bin/src/ui_transcoderoptionsopus.h:78
 #: ../bin/src/ui_transcoderoptionsspeex.h:215
@@ -4015,7 +4020,7 @@ msgstr ""
 msgid "Qt"
 msgstr "Qt"
 
-#: ../bin/src/ui_transcoderoptionsflac.h:80
+#: ../bin/src/ui_transcoderoptionsflac.h:92
 #: ../bin/src/ui_transcoderoptionsmp3.h:191
 #: ../bin/src/ui_transcoderoptionsspeex.h:216
 #: ../bin/src/ui_transcoderoptionsvorbis.h:201
@@ -5637,6 +5642,13 @@ msgstr "WMA"
 
 #: playlist/playlisttabbar.cpp:193 ../bin/src/ui_behavioursettingspage.h:394
 msgid "Warn me when closing a playlist tab"
+msgstr ""
+
+#: transcoder/transcoderoptionsflac.cpp:46
+msgid ""
+"Warning: This compression level is outside of the streamable subset. This "
+"means that a decoder may not be able to start playing it mid-stream. It may "
+"also affect the performance of hardware decoders."
 msgstr ""
 
 #: core/song.cpp:447 transcoder/transcoder.cpp:257

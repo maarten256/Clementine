@@ -12,7 +12,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2021-01-01 16:40+0000\n"
+"PO-Revision-Date: 2021-01-12 11:57+0000\n"
 "Last-Translator: John Maguire <john.maguire@gmail.com>\n"
 "Language-Team: Galician (http://www.transifex.com/davidsansome/clementine/language/gl/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -106,11 +106,6 @@ msgid ""
 "%2"
 msgstr ""
 
-#: playlist/playlistmanager.cpp:439
-#, qt-format
-msgid "%1 selected of"
-msgstr "%1 escollidas de"
-
 #: devices/deviceview.cpp:122
 #, qt-format
 msgid "%1 song"
@@ -131,7 +126,7 @@ msgstr "%1 canción encontrada"
 msgid "%1 songs found (showing %2)"
 msgstr "%1 cancións atopada (amosando %2)"
 
-#: playlist/playlistmanager.cpp:445 playlist/queue.cpp:228
+#: playlist/queue.cpp:228
 #, qt-format
 msgid "%1 tracks"
 msgstr "%1 canción"
@@ -152,10 +147,20 @@ msgstr "%1: Módulo Wiimotedev"
 msgid "%L1 other listeners"
 msgstr "%L1 outros oíntes"
 
+#: playlist/playlistmanager.cpp:439
+#, qt-format
+msgid "%L1 selected of"
+msgstr ""
+
 #: songinfo/lastfmtrackinfoprovider.cpp:94
 #, qt-format
 msgid "%L1 total plays"
 msgstr "%L1 reproducións totais"
+
+#: playlist/playlistmanager.cpp:445
+#, qt-format
+msgid "%L1 tracks"
+msgstr ""
 
 #: ../bin/src/ui_notificationssettingspage.h:432
 msgid "%filename%"
@@ -975,7 +980,7 @@ msgstr "Tipo de son básico"
 msgid "Behavior"
 msgstr "Comportamento"
 
-#: ../bin/src/ui_transcoderoptionsflac.h:82
+#: ../bin/src/ui_transcoderoptionsflac.h:94
 msgid "Best"
 msgstr "Mellor"
 
@@ -1478,14 +1483,14 @@ msgstr "Non se puido iniciar sesión en Last.fm. Ténteo de novo."
 msgid "Couldn't create playlist"
 msgstr "Non se puido crear a lista de reproducción"
 
-#: transcoder/transcoder.cpp:429
+#: transcoder/transcoder.cpp:428
 #, qt-format
 msgid ""
 "Couldn't find a muxer for %1, check you have the correct GStreamer plugins "
 "installed"
 msgstr "Non é posíbel atopar un multiplexor para %1. Asegúrese de que ten instalado os complementos GStreamer necesarios."
 
-#: transcoder/transcoder.cpp:422
+#: transcoder/transcoder.cpp:421
 #, qt-format
 msgid ""
 "Couldn't find an encoder for %1, check you have the correct GStreamer "
@@ -2311,7 +2316,7 @@ msgstr ""
 msgid "Failed to write new auto-tags to '%1'"
 msgstr ""
 
-#: ../bin/src/ui_transcoderoptionsflac.h:81
+#: ../bin/src/ui_transcoderoptionsflac.h:93
 #: ../bin/src/ui_transcoderoptionsmp3.h:199
 msgid "Fast"
 msgstr "Rápido"
@@ -2452,7 +2457,7 @@ msgstr "Ao esquecer un dispositivo, desaparecerá desta lista, e Clementine ter�
 #: ../bin/src/ui_wizardfinishpage.h:82
 #: ../bin/src/ui_songkickconcertwidget.h:99
 #: ../bin/src/ui_transcoderoptionsaac.h:127
-#: ../bin/src/ui_transcoderoptionsflac.h:79
+#: ../bin/src/ui_transcoderoptionsflac.h:91
 #: ../bin/src/ui_transcoderoptionsmp3.h:189
 #: ../bin/src/ui_transcoderoptionsopus.h:78
 #: ../bin/src/ui_transcoderoptionsspeex.h:215
@@ -4016,7 +4021,7 @@ msgstr "Pon as cancións aleatoriamente"
 msgid "Qt"
 msgstr ""
 
-#: ../bin/src/ui_transcoderoptionsflac.h:80
+#: ../bin/src/ui_transcoderoptionsflac.h:92
 #: ../bin/src/ui_transcoderoptionsmp3.h:191
 #: ../bin/src/ui_transcoderoptionsspeex.h:216
 #: ../bin/src/ui_transcoderoptionsvorbis.h:201
@@ -5639,6 +5644,13 @@ msgstr "WMA"
 #: playlist/playlisttabbar.cpp:193 ../bin/src/ui_behavioursettingspage.h:394
 msgid "Warn me when closing a playlist tab"
 msgstr "Advírtame ao pechar unha pestana de lista de reprodución"
+
+#: transcoder/transcoderoptionsflac.cpp:46
+msgid ""
+"Warning: This compression level is outside of the streamable subset. This "
+"means that a decoder may not be able to start playing it mid-stream. It may "
+"also affect the performance of hardware decoders."
+msgstr ""
 
 #: core/song.cpp:447 transcoder/transcoder.cpp:257
 msgid "Wav"

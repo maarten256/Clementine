@@ -18,18 +18,16 @@
 #ifndef GSTENGINEPIPELINE_H
 #define GSTENGINEPIPELINE_H
 
-#include <gst/gst.h>
-
 #include <QBasicTimer>
 #include <QFuture>
 #include <QMutex>
-#include <QObject>
 #include <QThreadPool>
 #include <QTimeLine>
 #include <QUrl>
 #include <memory>
 
 #include "engine_fwd.h"
+#include "gstpipelinebase.h"
 #include "playbackrequest.h"
 
 class GstElementDeleter;
@@ -39,15 +37,12 @@ class BufferConsumer;
 struct GstQueue;
 struct GstURIDecodeBin;
 
-class GstEnginePipeline : public QObject {
+class GstEnginePipeline : public GstPipelineBase {
   Q_OBJECT
 
  public:
   GstEnginePipeline(GstEngine* engine);
   ~GstEnginePipeline();
-
-  // Globally unique across all pipelines.
-  int id() const { return id_; }
 
   // Call these setters before Init
   void set_output_device(const QString& sink, const QVariant& device);
@@ -106,7 +101,6 @@ class GstEnginePipeline : public QObject {
 
   QString source_device() const { return source_device_; }
 
-  void DumpGraph();
  public slots:
   void SetVolumeModifier(qreal mod);
 
@@ -168,6 +162,9 @@ class GstEnginePipeline : public QObject {
   // a src pad immediately and we can link it after everything's created.
   void MaybeLinkDecodeToAudio();
 
+  // Helper method to retrieve the audio format from a GstCaps object.
+  static QString GetAudioFormat(GstCaps* caps);
+
  private slots:
   void FaderTimelineFinished();
 
@@ -180,14 +177,6 @@ class GstEnginePipeline : public QObject {
   static GstElementDeleter* sElementDeleter;
 
   GstEngine* engine_;
-
-  // Using == to compare two pipelines is a bad idea, because new ones often
-  // get created in the same address as old ones.  This ID will be unique for
-  // each pipeline.
-  // Threading warning: access to the static ID field isn't protected by a
-  // mutex because all pipeline creation is currently done in the main thread.
-  static int sId;
-  int id_;
 
   // General settings for the pipeline
   bool valid_;
@@ -278,8 +267,6 @@ class GstEnginePipeline : public QObject {
   QBasicTimer fader_fudge_timer_;
   bool use_fudge_timer_;
 
-  GstElement* pipeline_;
-
   // Bins
   // uridecodebin ! audiobin
   GstElement* uridecodebin_;
@@ -297,6 +284,7 @@ class GstEnginePipeline : public QObject {
   GstElement* volume_;
   GstElement* audioscale_;
   GstElement* audiosink_;
+  GstElement* capsfilter_;
 
   // tee and request pads.
   GstElement* tee_;

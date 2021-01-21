@@ -12,6 +12,7 @@
 # Hoven1 <thomas.hofverberg@tavelsjo.se>, 2012
 # Jonatan Nyberg <jonatan.nyberg.karl@gmail.com>, 2017
 # Jonatan Nyberg <jonatan.nyberg.karl@gmail.com>, 2019-2021
+# Jonatan Nyberg <jonatan.nyberg.karl@gmail.com>, 2021
 # Kristian <kristianm24@gmail.com>, 2012-2017
 # Kristian <kristianm24@gmail.com>, 2012
 # Kristoffer Grundström <lovaren@gmail.com>, 2014,2017
@@ -31,7 +32,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Clementine Music Player\n"
-"PO-Revision-Date: 2021-01-01 19:27+0000\n"
+"PO-Revision-Date: 2021-01-16 08:50+0000\n"
 "Last-Translator: Jonatan Nyberg <jonatan.nyberg.karl@gmail.com>\n"
 "Language-Team: Swedish (http://www.transifex.com/davidsansome/clementine/language/sv/)\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -125,11 +126,6 @@ msgid ""
 "%2"
 msgstr "%1 förfrågan misslyckades:\n%2"
 
-#: playlist/playlistmanager.cpp:439
-#, qt-format
-msgid "%1 selected of"
-msgstr "%1 vald(a) av"
-
 #: devices/deviceview.cpp:122
 #, qt-format
 msgid "%1 song"
@@ -150,7 +146,7 @@ msgstr "%1 låtar hittades"
 msgid "%1 songs found (showing %2)"
 msgstr "%1 låtar hittades (visar %2)"
 
-#: playlist/playlistmanager.cpp:445 playlist/queue.cpp:228
+#: playlist/queue.cpp:228
 #, qt-format
 msgid "%1 tracks"
 msgstr "%1 spår"
@@ -171,10 +167,20 @@ msgstr "%1: Wiimotedev-modul"
 msgid "%L1 other listeners"
 msgstr "%L1 andra lyssnare"
 
+#: playlist/playlistmanager.cpp:439
+#, qt-format
+msgid "%L1 selected of"
+msgstr "%L1 vald(a) av"
+
 #: songinfo/lastfmtrackinfoprovider.cpp:94
 #, qt-format
 msgid "%L1 total plays"
 msgstr "%L1 totala uppspelningar"
+
+#: playlist/playlistmanager.cpp:445
+#, qt-format
+msgid "%L1 tracks"
+msgstr "%L1 spår"
 
 #: ../bin/src/ui_notificationssettingspage.h:432
 msgid "%filename%"
@@ -994,7 +1000,7 @@ msgstr "Grundläggande ljudtyp"
 msgid "Behavior"
 msgstr "Beteende"
 
-#: ../bin/src/ui_transcoderoptionsflac.h:82
+#: ../bin/src/ui_transcoderoptionsflac.h:94
 msgid "Best"
 msgstr "Bästa"
 
@@ -1497,14 +1503,14 @@ msgstr "Det gick inte att logga in på Last.fm. Vänligen försök igen."
 msgid "Couldn't create playlist"
 msgstr "Kunde inte skapa spellista"
 
-#: transcoder/transcoder.cpp:429
+#: transcoder/transcoder.cpp:428
 #, qt-format
 msgid ""
 "Couldn't find a muxer for %1, check you have the correct GStreamer plugins "
 "installed"
 msgstr "Kunde inte hitta en muxer för %1, kontrollera att du har de korrekta GStreamer-insticksmodulerna installerade"
 
-#: transcoder/transcoder.cpp:422
+#: transcoder/transcoder.cpp:421
 #, qt-format
 msgid ""
 "Couldn't find an encoder for %1, check you have the correct GStreamer "
@@ -2330,7 +2336,7 @@ msgstr "Misslyckades med att uppdatera icecast-mappen:\n%1"
 msgid "Failed to write new auto-tags to '%1'"
 msgstr "Misslyckades med att skriva nya automatiska taggar till \"%1\""
 
-#: ../bin/src/ui_transcoderoptionsflac.h:81
+#: ../bin/src/ui_transcoderoptionsflac.h:93
 #: ../bin/src/ui_transcoderoptionsmp3.h:199
 msgid "Fast"
 msgstr "Snabb"
@@ -2471,7 +2477,7 @@ msgstr "Om en enhet glöms kommer den att tas bort från den här listan och Cle
 #: ../bin/src/ui_wizardfinishpage.h:82
 #: ../bin/src/ui_songkickconcertwidget.h:99
 #: ../bin/src/ui_transcoderoptionsaac.h:127
-#: ../bin/src/ui_transcoderoptionsflac.h:79
+#: ../bin/src/ui_transcoderoptionsflac.h:91
 #: ../bin/src/ui_transcoderoptionsmp3.h:189
 #: ../bin/src/ui_transcoderoptionsopus.h:78
 #: ../bin/src/ui_transcoderoptionsspeex.h:215
@@ -4035,7 +4041,7 @@ msgstr "Lägg till låtar i slumpmässig ordning"
 msgid "Qt"
 msgstr "Qt"
 
-#: ../bin/src/ui_transcoderoptionsflac.h:80
+#: ../bin/src/ui_transcoderoptionsflac.h:92
 #: ../bin/src/ui_transcoderoptionsmp3.h:191
 #: ../bin/src/ui_transcoderoptionsspeex.h:216
 #: ../bin/src/ui_transcoderoptionsvorbis.h:201
@@ -4713,7 +4719,7 @@ msgstr "Visa avdelare"
 
 #: ui/albumcoverchoicecontroller.cpp:78 widgets/prettyimage.cpp:184
 msgid "Show fullsize..."
-msgstr "Visa full storlek..."
+msgstr "Visa i full storlek..."
 
 #: library/libraryview.cpp:432 ui/mainwindow.cpp:738
 #: widgets/fileviewlist.cpp:54
@@ -5658,6 +5664,13 @@ msgstr "WMA"
 #: playlist/playlisttabbar.cpp:193 ../bin/src/ui_behavioursettingspage.h:394
 msgid "Warn me when closing a playlist tab"
 msgstr "Varna mig när jag stänger en spellisteflik"
+
+#: transcoder/transcoderoptionsflac.cpp:46
+msgid ""
+"Warning: This compression level is outside of the streamable subset. This "
+"means that a decoder may not be able to start playing it mid-stream. It may "
+"also affect the performance of hardware decoders."
+msgstr "Varning: Denna komprimeringsnivå ligger utanför den strömningsbara delmängden. Detta innebär att en avkodare kanske inte kan börja spela den i mitten av strömmen. Det kan också påverka prestanda för hårdvaruavkodare."
 
 #: core/song.cpp:447 transcoder/transcoder.cpp:257
 msgid "Wav"

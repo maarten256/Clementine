@@ -48,13 +48,11 @@ const int GstEnginePipeline::kEqBandCount = 10;
 const int GstEnginePipeline::kEqBandFrequencies[] = {
     60, 170, 310, 600, 1000, 3000, 6000, 12000, 14000, 16000};
 
-int GstEnginePipeline::sId = 1;
 GstElementDeleter* GstEnginePipeline::sElementDeleter = nullptr;
 
 GstEnginePipeline::GstEnginePipeline(GstEngine* engine)
-    : QObject(nullptr),
+    : GstPipelineBase("audio"),
       engine_(engine),
-      id_(sId++),
       valid_(false),
       sink_(GstEngine::kAutoSink),
       segment_start_(0),
@@ -85,7 +83,6 @@ GstEnginePipeline::GstEnginePipeline(GstEngine* engine)
       last_known_position_ns_(0),
       volume_percent_(100),
       volume_modifier_(1.0),
-      pipeline_(nullptr),
       uridecodebin_(nullptr),
       audiobin_(nullptr),
       queue_(nullptr),
@@ -98,6 +95,7 @@ GstEnginePipeline::GstEnginePipeline(GstEngine* engine)
       volume_(nullptr),
       audioscale_(nullptr),
       audiosink_(nullptr),
+      capsfilter_(nullptr),
       tee_(nullptr),
       tee_probe_pad_(nullptr),
       tee_audio_pad_(nullptr) {
@@ -252,8 +250,8 @@ bool GstEnginePipeline::InitAudioBin() {
   // right type of source and decoder for the URI.
 
   // The audio bin gets created here and contains:
-  //   queue ! audioconvert ! <caps32>
-  //         ! ( rgvolume ! rglimiter ! audioconvert2 ) ! tee
+  //   queue ! audioconvert
+  //         ! ( rgvolume ! rglimiter ! audioconvert2 ) ! capsfilter ! tee
   // rgvolume and rglimiter are only created when replaygain is enabled.
 
   // After the tee the pipeline splits.  One split is converted to 16-bit int
@@ -321,27 +319,29 @@ bool GstEnginePipeline::InitAudioBin() {
   volume_ = engine_->CreateElement("volume", audiobin_);
   audioscale_ = engine_->CreateElement("audioresample", audiobin_);
   convert = engine_->CreateElement("audioconvert", audiobin_);
+  capsfilter_ = engine_->CreateElement("capsfilter", audiobin_);
 
   if (!queue_ || !audioconvert_ || !tee_ || !probe_queue || !probe_converter ||
       !probe_sink || !audio_queue || !equalizer_preamp_ || !equalizer_ ||
-      !stereo_panorama_ || !volume_ || !audioscale_ || !convert) {
+      !stereo_panorama_ || !volume_ || !audioscale_ || !convert ||
+      !capsfilter_) {
     qLog(Error) << "Failed to create elements";
     return false;
   }
 
   // Create the replaygain elements if it's enabled.  event_probe is the
   // audioconvert element we attach the probe to, which will change depending
-  // on whether replaygain is enabled.  convert_sink is the element after the
-  // first audioconvert, which again will change.
+  // on whether replaygain is enabled.  tee_src is the element that links to
+  // the tee.
   GstElement* event_probe = audioconvert_;
-  GstElement* convert_sink = tee_;
+  GstElement* tee_src = audioconvert_;
 
   if (rg_enabled_) {
     rgvolume_ = engine_->CreateElement("rgvolume", audiobin_);
     rglimiter_ = engine_->CreateElement("rglimiter", audiobin_);
     audioconvert2_ = engine_->CreateElement("audioconvert", audiobin_);
     event_probe = audioconvert2_;
-    convert_sink = rgvolume_;
+    tee_src = audioconvert2_;
 
     if (!rgvolume_ || !rglimiter_ || !audioconvert2_) {
       qLog(Error) << "Failed to create rg elements";
@@ -434,8 +434,12 @@ bool GstEnginePipeline::InitAudioBin() {
   g_object_set(G_OBJECT(probe_queue), "max-size-bytes", 0, nullptr);
   g_object_set(G_OBJECT(probe_queue), "max-size-time", 0, nullptr);
 
-  gst_element_link_many(queue_, audioconvert_, convert_sink, nullptr);
-  gst_element_link(probe_converter, probe_sink);
+  gst_element_link(queue_, audioconvert_);
+
+  GstCaps* caps16 = gst_caps_new_simple("audio/x-raw", "format", G_TYPE_STRING,
+                                        "S16LE", NULL);
+  gst_element_link_filtered(probe_converter, probe_sink, caps16);
+  gst_caps_unref(caps16);
 
   // Link the outputs of tee to the queues on each path.
   pad = gst_element_get_static_pad(probe_queue, "sink");
@@ -450,14 +454,15 @@ bool GstEnginePipeline::InitAudioBin() {
 
   // Link replaygain elements if enabled.
   if (rg_enabled_) {
-    gst_element_link_many(rgvolume_, rglimiter_, audioconvert2_, tee_, nullptr);
+    gst_element_link_many(audioconvert_, rgvolume_, rglimiter_, audioconvert2_,
+                          nullptr);
   }
 
-  // Link the analyzer output of the tee and force 16 bit caps
-  GstCaps* caps16 = gst_caps_new_simple("audio/x-raw", "format", G_TYPE_STRING,
-                                        "S16LE", NULL);
-  gst_element_link_filtered(probe_queue, probe_converter, caps16);
-  gst_caps_unref(caps16);
+  // Link the trunk to the tee via filter.
+  gst_element_link_many(tee_src, capsfilter_, tee_, nullptr);
+
+  // Link the analyzer output of the tee
+  gst_element_link(probe_queue, probe_converter);
 
   gst_element_link_many(audio_queue, equalizer_preamp_, equalizer_,
                         stereo_panorama_, volume_, audioscale_, convert,
@@ -503,7 +508,7 @@ void GstEnginePipeline::MaybeLinkDecodeToAudio() {
 }
 
 bool GstEnginePipeline::InitFromString(const QString& pipeline) {
-  pipeline_ = gst_pipeline_new("pipeline");
+  if (!Init()) return false;
 
   GstElement* new_bin =
       CreateDecodeBinFromString(pipeline.toLatin1().constData());
@@ -522,7 +527,7 @@ bool GstEnginePipeline::InitFromString(const QString& pipeline) {
 
 bool GstEnginePipeline::InitFromReq(const MediaPlaybackRequest& req,
                                     qint64 end_nanosec) {
-  pipeline_ = gst_pipeline_new("pipeline");
+  if (!Init()) return false;
 
   current_ = req;
   QUrl url = current_.url_;
@@ -572,8 +577,6 @@ GstEnginePipeline::~GstEnginePipeline() {
         gst_object_unref(tee_audio_pad_);
       }
     }
-
-    gst_object_unref(GST_OBJECT(pipeline_));
   }
 }
 
@@ -842,20 +845,59 @@ void GstEnginePipeline::BufferingMessageReceived(GstMessage* msg) {
   }
 }
 
+QString GstEnginePipeline::GetAudioFormat(GstCaps* caps) {
+  const guint sz = gst_caps_get_size(caps);
+  for (int i = 0; i < sz; i++) {
+    GstStructure* s = gst_caps_get_structure(caps, i);
+    if (strcmp(gst_structure_get_name(s), "audio/x-raw") == 0) {
+      const gchar* fmt = gst_structure_get_string(s, "format");
+      if (fmt != nullptr) {
+        return QString::fromUtf8(fmt);
+      }
+    }
+  }
+  return "";
+}
+
 void GstEnginePipeline::NewPadCallback(GstElement*, GstPad* pad,
                                        gpointer self) {
   GstEnginePipeline* instance = reinterpret_cast<GstEnginePipeline*>(self);
   GstPad* const audiopad =
       gst_element_get_static_pad(instance->audiobin_, "sink");
 
-  // Link decodebin's sink pad to audiobin's src pad.
+  qLog(Debug) << "Decoder bin pad added:" << GST_PAD_NAME(pad);
+
+  // Make sure the audio bin isn't already linked to something.
   if (GST_PAD_IS_LINKED(audiopad)) {
     qLog(Warning) << instance->id()
                   << "audiopad is already linked, unlinking old pad";
     gst_pad_unlink(audiopad, GST_PAD_PEER(audiopad));
   }
 
-  gst_pad_link(pad, audiopad);
+  // See what the decoder bin wants to output.
+  GstCaps* caps = gst_pad_get_current_caps(pad);
+  if (caps) {
+    gchar* caps_str = gst_caps_to_string(caps);
+    qLog(Debug) << "Current caps:" << caps_str;
+    g_free(caps_str);
+
+    QString fmt = GetAudioFormat(caps);
+
+    // The output branch only handles F32LE and S16LE. If the source is S16LE,
+    // then use that throughout the pipeline. Otherwise, use F32LE.
+    if (fmt != "S16LE") {
+      GstCaps* new_caps = gst_caps_new_simple("audio/x-raw", "format",
+                                              G_TYPE_STRING, "F32LE", nullptr);
+      g_object_set(instance->capsfilter_, "caps", new_caps, nullptr);
+      gst_caps_unref(new_caps);
+    }
+    gst_caps_unref(caps);
+  }
+
+  // Link decodebin's sink pad to audiobin's src pad.
+  if (gst_pad_link(pad, audiopad) != GST_PAD_LINK_OK) {
+    qLog(Error) << "Failed to link decoder to audio bin.";
+  }
   gst_object_unref(audiopad);
 
   // Offset the timestamps on all the buffers coming out of the decodebin so
@@ -1091,6 +1133,11 @@ void GstEnginePipeline::TransitionToNext() {
   GstElement* old_decode_bin = uridecodebin_;
 
   ignore_tags_ = true;
+
+  // Reset the caps filter
+  GstCaps* new_caps = gst_caps_new_any();
+  g_object_set(capsfilter_, "caps", new_caps, nullptr);
+  gst_caps_unref(new_caps);
 
   if (!ReplaceDecodeBin(next_.url_)) {
     qLog(Error) << "ReplaceDecodeBin failed with " << next_.url_;
@@ -1331,16 +1378,4 @@ void GstEnginePipeline::SetNextReq(const MediaPlaybackRequest& req,
   next_ = req;
   next_beginning_offset_nanosec_ = beginning_nanosec;
   next_end_offset_nanosec_ = end_nanosec;
-}
-
-void GstEnginePipeline::DumpGraph() {
-#ifdef GST_DISABLE_GST_DEBUG
-  qLog(Debug) << "Cannot dump graph. gstreamer debug is not enabled.";
-#else
-  if (pipeline_) {
-    qLog(Debug) << "Dumping pipeline graph";
-    GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS(GST_BIN(pipeline_),
-                                      GST_DEBUG_GRAPH_SHOW_ALL, "pipeline");
-  }
-#endif
 }
